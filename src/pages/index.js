@@ -1,6 +1,7 @@
 import Tetromino from '@/components/Tetromino'
 import { I } from '@/lib/TetrominoType'
 import { useState } from 'react'
+import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon } from '@heroicons/react/24/solid'
 
 export default function Home() {
   const [currentTetromino, setCurrentTetromino] = useState({
@@ -13,7 +14,7 @@ export default function Home() {
   const [operation, setOperation] = useState()
 
   return (
-    <main className='w-full h-screen focus:outline-none flex items-center justify-center' tabIndex='0' onKeyDown={({ code }) => {
+    <main className='w-full h-screen focus:outline-none flex gap-8 items-center justify-center' tabIndex='0' onKeyDown={({ code }) => {
       switch (code) {
         case 'ArrowUp':
           setCurrentTetromino({ ...currentTetromino, rotate: (currentTetromino.rotate + 1) % 4 })
@@ -39,22 +40,38 @@ export default function Home() {
           console.log(code)
       }
     }}>
-      <div className='w-[480px] h-[600px] border border-black rounded relative'>
-        {currentTetromino && (
-          <Tetromino {...currentTetromino} operation={operation} onCollision={({ x, y, rotate }) => {
-            if (Number.isInteger(x)) {
-              currentTetromino.x = x
-            }
 
-            if (Number.isInteger(y)) {
-              currentTetromino.y = y
-            }
+      <div className='flex flex-col gap-4 items-center'>
+        <div className='w-[480px] h-[600px] border border-black rounded relative'>
+          {currentTetromino && (
+            <Tetromino {...currentTetromino} operation={operation} onCollision={({ x, y, rotate }) => {
+              if (Number.isInteger(x)) {
+                currentTetromino.x = x
+              }
 
-            if (rotate) {
-              currentTetromino.rotate = rotate
-            }
-          }} />
-        )}
+              if (Number.isInteger(y)) {
+                currentTetromino.y = y
+              }
+
+              if (rotate) {
+                currentTetromino.rotate = rotate
+              }
+            }} />
+          )}
+        </div>
+        <div className='flex gap-2 items-center'>
+          <span className='text-gray-500'>https://github.com/huoyijie/tetris</span>
+          <span className='text-sm text-red-600'>(开发中)</span>
+        </div>
+      </div>
+
+      <div className='flex flex-col gap-2 items-center'>
+        <div className='border rounded-lg bg-slate-400 text-white px-6 py-3 max-w-min'><ChevronUpIcon className='w-6' /></div>
+        <div className='flex gap-2'>
+          <div className='border rounded-lg bg-slate-400 text-white px-6 py-3 max-w-min'><ChevronLeftIcon className='w-6' /></div>
+          <div className='border rounded-lg bg-slate-400 text-white px-6 py-3 max-w-min'><ChevronDownIcon className='w-6' /></div>
+          <div className='border rounded-lg bg-slate-400 text-white px-6 py-3 max-w-min'><ChevronRightIcon className='w-6' /></div>
+        </div>
       </div>
     </main>
   )
