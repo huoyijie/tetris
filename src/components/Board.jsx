@@ -1,11 +1,12 @@
 import { useContext } from 'react'
 import Tetromino from './Tetromino'
 import Context from './Context'
+import { FALLDOWN } from '@/lib/OperationType'
 
 export default function () {
-  const { currentTetromino, operation, tetrominoes } = useContext(Context)
+  const { currentTetromino, operation, tetrominoes, next } = useContext(Context)
 
-  const onCollision = ({ x, y, rotate }) => {
+  const onCollision = ({ x, y, rotate, operation }) => {
     if (Number.isInteger(x)) {
       currentTetromino.x = x
     }
@@ -17,13 +18,17 @@ export default function () {
     if (Number.isInteger(rotate)) {
       currentTetromino.rotate = rotate
     }
+
+    if (operation == FALLDOWN) {
+      setTimeout(next, 200)
+    }
   }
 
   return (
     <div className='flex flex-col gap-4 items-center'>
       <div className='w-[480px] h-[600px] border border-black rounded relative'>
         {currentTetromino && (
-          <Tetromino {...currentTetromino} operation={operation} onCollision={onCollision} />
+          <Tetromino {...currentTetromino} active={true} operation={operation} onCollision={onCollision} />
         )}
         {tetrominoes.map((tetromino, i) => (
           <Tetromino key={i} {...tetromino} />

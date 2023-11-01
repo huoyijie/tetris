@@ -1,6 +1,6 @@
 import { I } from '@/lib/TetrominoType'
 import Cube from './Cube'
-import { DOWN, LEFT, RIGHT, ROTATE } from '@/lib/OperationType'
+import { DOWN, FALLDOWN, LEFT, RIGHT, ROTATE } from '@/lib/OperationType'
 import { useContext } from 'react'
 import Context from './Context'
 
@@ -69,6 +69,15 @@ function detectCollision(props, tetrominoes) {
         }
       }
       break
+
+    case FALLDOWN:
+      // todo
+      if (y != 24) {
+        const collision = { operation, y: 24 }
+        onCollision(collision)
+        return collision
+      }
+      break
   }
 
   return {}
@@ -78,7 +87,7 @@ function rotatePoints(rotate) {
   return (rotate == 0 || rotate == 2) ? [[0, 0], [1, 0], [2, 0], [3, 0]] : [[1, -1], [1, 0], [1, 1], [1, 2]]
 }
 
-export default function ({ type, x, y, rotate = 0, operation = false, onCollision }) {
+export default function ({ type, x, y, rotate = 0, active = false, operation = false, onCollision }) {
   const props = { x, y, rotate, operation, onCollision, points: null }
   const { tetrominoes } = useContext(Context)
 
@@ -94,7 +103,7 @@ export default function ({ type, x, y, rotate = 0, operation = false, onCollisio
       tetromino = (
         <div className='relative'>
           {props.points && props.points.map(([x, y], i) => (
-            <Cube key={i} x={x} y={y} />
+            <Cube key={i} x={x} y={y} active={active} />
           ))}
         </div>
       )

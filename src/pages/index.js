@@ -1,6 +1,6 @@
 import { I } from '@/lib/TetrominoType'
 import { useState } from 'react'
-import { DOWN, LEFT, RIGHT, ROTATE } from '@/lib/OperationType'
+import { DOWN, FALLDOWN, LEFT, RIGHT, ROTATE } from '@/lib/OperationType'
 import Operation from '@/components/Operation'
 import Context from '@/components/Context'
 import Board from '@/components/Board'
@@ -27,7 +27,7 @@ export default function () {
     setCurrentTetromino(nextTetromino())
   }
 
-  const fallDown = () => { }
+  const fallDown = () => setOperation(FALLDOWN)
 
   const onKeyDown = ({ code }) => {
     switch (code) {
@@ -62,6 +62,10 @@ export default function () {
       default:
         console.log(code)
     }
+  }
+
+  if (!currentTetromino) {
+    next()
   }
 
   return (
