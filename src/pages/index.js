@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon } from '@heroicons/react/24/solid'
 
 export default function Home() {
+  const [tetrominoes, setTetrominoes] = useState([])
   const [currentTetromino, setCurrentTetromino] = useState({
     type: I,
     x: 8,
@@ -58,6 +59,9 @@ export default function Home() {
               }
             }} />
           )}
+          {tetrominoes.map((tetromino, i) => (
+            <Tetromino key={i} {...tetromino} />
+          ))}
         </div>
         <div className='flex gap-2 items-center'>
           <span className='text-gray-500'>https://github.com/huoyijie/tetris</span>
@@ -72,6 +76,16 @@ export default function Home() {
           <div className='border rounded-lg bg-slate-400 text-white px-6 py-3 max-w-min'><ChevronDownIcon className='w-6' /></div>
           <div className='border rounded-lg bg-slate-400 text-white px-6 py-3 max-w-min'><ChevronRightIcon className='w-6' /></div>
         </div>
+        <div className='w-full'><button className='w-full border rounded-lg px-6 py-3 bg-slate-400 text-white hover:bg-slate-600 active:bg-slate-400 focus:outline-none' onClick={() => {
+          tetrominoes.push(currentTetromino)
+          setTetrominoes([...tetrominoes])
+          setCurrentTetromino({
+            type: I,
+            x: 8,
+            y: 0,
+            rotate: 0,
+          })
+        }}>Next</button></div>
       </div>
     </main>
   )

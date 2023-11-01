@@ -59,7 +59,7 @@ function rotatePoints(rotate) {
   return (rotate == 0 || rotate == 2) ? [[0, 0], [1, 0], [2, 0], [3, 0]] : [[1, -1], [1, 0], [1, 1], [1, 2]]
 }
 
-export default function ({ type, x, y, rotate = 0, operation, onCollision }) {
+export default function ({ type, x, y, rotate = 0, operation = false, onCollision }) {
   let tetromino = <></>
 
   switch (type) {
