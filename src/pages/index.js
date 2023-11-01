@@ -27,6 +27,8 @@ export default function () {
     setCurrentTetromino(nextTetromino())
   }
 
+  const fallDown = () => { }
+
   const onKeyDown = ({ code }) => {
     switch (code) {
       case 'ArrowUp':
@@ -48,8 +50,13 @@ export default function () {
         setCurrentTetromino({ ...currentTetromino, x: currentTetromino.x + 1 })
         setOperation(RIGHT)
         break
+
       case 'KeyN':
         next()
+        break
+
+      case 'KeyF':
+        fallDown()
         break
 
       default:
@@ -58,7 +65,7 @@ export default function () {
   }
 
   return (
-    <Context.Provider value={{ currentTetromino, tetrominoes, operation, next }}>
+    <Context.Provider value={{ currentTetromino, tetrominoes, operation, next, fallDown }}>
       <main className='w-full h-screen focus:outline-none flex gap-8 items-center justify-center' tabIndex={0} onKeyDown={onKeyDown}>
         <Board />
         <Operation />
