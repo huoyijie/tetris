@@ -2,6 +2,7 @@ import Tetromino from '@/components/Tetromino'
 import { I } from '@/lib/TetrominoType'
 import { useState } from 'react'
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon } from '@heroicons/react/24/solid'
+import { DOWN, LEFT, RIGHT, ROTATE } from '@/lib/OperationType'
 
 function nextTetromino() {
   return {
@@ -23,22 +24,22 @@ export default function Home() {
       switch (code) {
         case 'ArrowUp':
           setCurrentTetromino({ ...currentTetromino, rotate: (currentTetromino.rotate + 1) % 4 })
-          setOperation(code)
+          setOperation(ROTATE)
           break
 
         case 'ArrowDown':
           setCurrentTetromino({ ...currentTetromino, y: currentTetromino.y + 1 })
-          setOperation(code)
+          setOperation(DOWN)
           break
 
         case 'ArrowLeft':
           setCurrentTetromino({ ...currentTetromino, x: currentTetromino.x - 1 })
-          setOperation(code)
+          setOperation(LEFT)
           break
 
         case 'ArrowRight':
           setCurrentTetromino({ ...currentTetromino, x: currentTetromino.x + 1 })
-          setOperation(code)
+          setOperation(RIGHT)
           break
 
         default:

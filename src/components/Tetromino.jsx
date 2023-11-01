@@ -1,5 +1,6 @@
 import { I } from '@/lib/TetrominoType'
 import Cube from './Cube'
+import { DOWN, LEFT, RIGHT, ROTATE } from '@/lib/OperationType'
 
 function width() {
   return 480 / 24
@@ -9,42 +10,48 @@ function height() {
   return 600 / 24
 }
 
-function detectCollision({ x, y, rotate }, points, operation, onCollision) {
+function detectCollision(props) {
+  const { x, y, rotate, operation, onCollision, points } = props
   switch (operation) {
-    case 'ArrowUp':
+    case ROTATE:
       for (let [px, py] of points) {
         if (x + px < 0 || x + px >= width() || y + py < 0 || y + py >= height()) {
-          const collision = { type: 'rotate', rotate: (rotate == 0) ? 3 : (rotate - 1) }
+          props.rotate = (rotate == 0) ? 3 : (rotate - 1)
+          props.points = rotatePoints(props.rotate)
+          const collision = { rotate: props.rotate }
           onCollision(collision)
           return collision
         }
       }
       break
 
-    case 'ArrowLeft':
+    case LEFT:
       for (let [px] of points) {
         if (x + px < 0) {
-          const collision = { type: 'left', x: x + 1 }
+          props.x = x + 1
+          const collision = { x: props.x }
           onCollision(collision)
           return collision
         }
       }
       break
 
-    case 'ArrowRight':
+    case RIGHT:
       for (let [px] of points) {
         if (x + px >= width()) {
-          const collision = { type: 'right', x: x - 1 }
+          props.x = x - 1
+          const collision = { x: props.x }
           onCollision(collision)
           return collision
         }
       }
       break
 
-    case 'ArrowDown':
+    case DOWN:
       for (let [_, py] of points) {
         if (y + py >= height()) {
-          const collision = { type: 'down', y: y - 1 }
+          props.y = y - 1
+          const collision = { y: props.y }
           onCollision(collision)
           return collision
         }
@@ -60,34 +67,20 @@ function rotatePoints(rotate) {
 }
 
 export default function ({ type, x, y, rotate = 0, operation = false, onCollision }) {
-  let tetromino = <></>
+  const props = { x, y, rotate, operation, onCollision, points: null }
 
+  let tetromino = <></>
   switch (type) {
     case I:
-      let points = rotatePoints(rotate)
+      props.points = rotatePoints(rotate)
 
       if (operation) {
-        const { type: collisionType, x: revertX, y: revertY, rotate: revertRotate } = detectCollision({ x, y, rotate }, points, operation, onCollision)
-        if (collisionType) {
-          switch (collisionType) {
-            case 'left':
-            case 'right':
-              x = revertX
-              break
-            case 'down':
-              y = revertY
-              break
-            case 'rotate':
-              rotate = revertRotate
-              points = rotatePoints(rotate)
-              break
-          }
-        }
+        detectCollision(props)
       }
 
       tetromino = (
         <div className='relative'>
-          {points.map(([x, y], i) => (
+          {props.points && props.points.map(([x, y], i) => (
             <Cube key={i} x={x} y={y} />
           ))}
         </div>
@@ -96,7 +89,7 @@ export default function ({ type, x, y, rotate = 0, operation = false, onCollisio
   }
 
   return (
-    <div className='max-w-min absolute' style={{ top: y * 24, left: x * 24 }}>
+    <div className='max-w-min absolute' style={{ top: props.y * 24, left: props.x * 24 }}>
       {tetromino}
     </div>
   )
