@@ -3,14 +3,18 @@ import { I } from '@/lib/TetrominoType'
 import { useState } from 'react'
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon } from '@heroicons/react/24/solid'
 
-export default function Home() {
-  const [tetrominoes, setTetrominoes] = useState([])
-  const [currentTetromino, setCurrentTetromino] = useState({
+function nextTetromino() {
+  return {
     type: I,
     x: 8,
     y: 0,
     rotate: 0,
-  })
+  }
+}
+
+export default function Home() {
+  const [tetrominoes, setTetrominoes] = useState([])
+  const [currentTetromino, setCurrentTetromino] = useState()
 
   const [operation, setOperation] = useState()
 
@@ -77,14 +81,11 @@ export default function Home() {
           <div className='border rounded-lg bg-slate-400 text-white px-6 py-3 max-w-min'><ChevronRightIcon className='w-6' /></div>
         </div>
         <div className='w-full'><button className='w-full border rounded-lg px-6 py-3 bg-slate-400 text-white hover:bg-slate-600 active:bg-slate-400 focus:outline-none' onClick={() => {
-          tetrominoes.push(currentTetromino)
-          setTetrominoes([...tetrominoes])
-          setCurrentTetromino({
-            type: I,
-            x: 8,
-            y: 0,
-            rotate: 0,
-          })
+          if (currentTetromino) {
+            tetrominoes.push(currentTetromino)
+            setTetrominoes([...tetrominoes])
+          }
+          setCurrentTetromino(nextTetromino())
         }}>Next</button></div>
       </div>
     </main>
