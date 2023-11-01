@@ -1,6 +1,8 @@
 import { I } from '@/lib/TetrominoType'
 import Cube from './Cube'
 import { DOWN, LEFT, RIGHT, ROTATE } from '@/lib/OperationType'
+import { useContext } from 'react'
+import Context from './Context'
 
 function width() {
   return 480 / 24
@@ -10,12 +12,22 @@ function height() {
   return 600 / 24
 }
 
-function detectCollision(props) {
+function emptyGrid({ x, y }, tetrominoes) {
+  for (let { x: tx, y: ty, rotate } of tetrominoes) {
+    for (let [px, py] of rotatePoints(rotate)) {
+      if (tx + px == x && ty + py == y)
+        return false
+    }
+  }
+  return true
+}
+
+function detectCollision(props, tetrominoes) {
   const { x, y, rotate, operation, onCollision, points } = props
   switch (operation) {
     case ROTATE:
       for (let [px, py] of points) {
-        if (x + px < 0 || x + px >= width() || y + py < 0 || y + py >= height()) {
+        if (x + px < 0 || x + px >= width() || y + py < 0 || y + py >= height() || !emptyGrid({ x: x + px, y: y + py }, tetrominoes)) {
           props.rotate = (rotate == 0) ? 3 : (rotate - 1)
           props.points = rotatePoints(props.rotate)
           const collision = { rotate: props.rotate }
@@ -26,8 +38,8 @@ function detectCollision(props) {
       break
 
     case LEFT:
-      for (let [px] of points) {
-        if (x + px < 0) {
+      for (let [px, py] of points) {
+        if (x + px < 0 || !emptyGrid({ x: x + px, y: y + py }, tetrominoes)) {
           props.x = x + 1
           const collision = { x: props.x }
           onCollision(collision)
@@ -37,8 +49,8 @@ function detectCollision(props) {
       break
 
     case RIGHT:
-      for (let [px] of points) {
-        if (x + px >= width()) {
+      for (let [px, py] of points) {
+        if (x + px >= width() || !emptyGrid({ x: x + px, y: y + py }, tetrominoes)) {
           props.x = x - 1
           const collision = { x: props.x }
           onCollision(collision)
@@ -48,8 +60,8 @@ function detectCollision(props) {
       break
 
     case DOWN:
-      for (let [_, py] of points) {
-        if (y + py >= height()) {
+      for (let [px, py] of points) {
+        if (y + py >= height() || !emptyGrid({ x: x + px, y: y + py }, tetrominoes)) {
           props.y = y - 1
           const collision = { y: props.y }
           onCollision(collision)
@@ -68,6 +80,7 @@ function rotatePoints(rotate) {
 
 export default function ({ type, x, y, rotate = 0, operation = false, onCollision }) {
   const props = { x, y, rotate, operation, onCollision, points: null }
+  const { tetrominoes } = useContext(Context)
 
   let tetromino = <></>
   switch (type) {
@@ -75,7 +88,7 @@ export default function ({ type, x, y, rotate = 0, operation = false, onCollisio
       props.points = rotatePoints(rotate)
 
       if (operation) {
-        detectCollision(props)
+        detectCollision(props, tetrominoes)
       }
 
       tetromino = (
