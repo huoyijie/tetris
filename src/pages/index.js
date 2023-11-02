@@ -27,35 +27,47 @@ export default function () {
     setCurrentTetromino(nextTetromino())
   }
 
-  const fallDown = () => setOperation(FALLDOWN)
+  const rotate = () => {
+    setCurrentTetromino({ ...currentTetromino, rotate: (currentTetromino.rotate + 1) % 4 })
+    setOperation(ROTATE)
+  }
+
+  const down = () => {
+    setCurrentTetromino({ ...currentTetromino, y: currentTetromino.y + 1 })
+    setOperation(DOWN)
+  }
+
+  const left = () => {
+    setCurrentTetromino({ ...currentTetromino, x: currentTetromino.x - 1 })
+    setOperation(LEFT)
+  }
+
+  const right = () => {
+    setCurrentTetromino({ ...currentTetromino, x: currentTetromino.x + 1 })
+    setOperation(RIGHT)
+  }
+
+  const fallDown = () => { }//setOperation(FALLDOWN)
 
   const onKeyDown = ({ code }) => {
     switch (code) {
       case 'ArrowUp':
-        setCurrentTetromino({ ...currentTetromino, rotate: (currentTetromino.rotate + 1) % 4 })
-        setOperation(ROTATE)
+        rotate()
         break
 
       case 'ArrowDown':
-        setCurrentTetromino({ ...currentTetromino, y: currentTetromino.y + 1 })
-        setOperation(DOWN)
+        down()
         break
 
       case 'ArrowLeft':
-        setCurrentTetromino({ ...currentTetromino, x: currentTetromino.x - 1 })
-        setOperation(LEFT)
+        left()
         break
 
       case 'ArrowRight':
-        setCurrentTetromino({ ...currentTetromino, x: currentTetromino.x + 1 })
-        setOperation(RIGHT)
+        right()
         break
 
-      case 'KeyN':
-        next()
-        break
-
-      case 'KeyF':
+      case 'Space':
         fallDown()
         break
 
@@ -64,12 +76,8 @@ export default function () {
     }
   }
 
-  if (!currentTetromino) {
-    next()
-  }
-
   return (
-    <Context.Provider value={{ currentTetromino, tetrominoes, operation, next, fallDown }}>
+    <Context.Provider value={{ currentTetromino, tetrominoes, operation, fallDown, rotate, down, left, right, next }}>
       <main className='w-full h-screen focus:outline-none flex gap-8 items-center justify-center' tabIndex={0} onKeyDown={onKeyDown}>
         <Board />
         <Operation />

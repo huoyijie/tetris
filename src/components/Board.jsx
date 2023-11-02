@@ -1,12 +1,22 @@
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import Tetromino from './Tetromino'
 import Context from './Context'
-import { FALLDOWN } from '@/lib/OperationType'
 
 export default function () {
-  const { currentTetromino, operation, tetrominoes, next } = useContext(Context)
+  const { currentTetromino, operation, tetrominoes, down, next } = useContext(Context)
 
-  const onCollision = ({ x, y, rotate, operation }) => {
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      if (currentTetromino) {
+        down()
+      } else {
+        next()
+      }
+    }, 1000)
+    return () => clearInterval(intervalId)
+  }, [currentTetromino])
+
+  const onCollision = ({ x, y, rotate, over }) => {
     if (Number.isInteger(x)) {
       currentTetromino.x = x
     }
@@ -19,8 +29,8 @@ export default function () {
       currentTetromino.rotate = rotate
     }
 
-    if (operation == FALLDOWN) {
-      setTimeout(next, 200)
+    if (over) {
+      queueMicrotask(next)
     }
   }
 

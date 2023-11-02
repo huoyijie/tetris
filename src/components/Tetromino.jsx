@@ -30,9 +30,7 @@ function detectCollision(props, tetrominoes) {
         if (x + px < 0 || x + px >= width() || y + py < 0 || y + py >= height() || !emptyGrid({ x: x + px, y: y + py }, tetrominoes)) {
           props.rotate = (rotate == 0) ? 3 : (rotate - 1)
           props.points = rotatePoints(props.rotate)
-          const collision = { rotate: props.rotate }
-          onCollision(collision)
-          return collision
+          onCollision({ rotate: props.rotate })
         }
       }
       break
@@ -41,9 +39,7 @@ function detectCollision(props, tetrominoes) {
       for (let [px, py] of points) {
         if (x + px < 0 || !emptyGrid({ x: x + px, y: y + py }, tetrominoes)) {
           props.x = x + 1
-          const collision = { x: props.x }
-          onCollision(collision)
-          return collision
+          onCollision({ x: props.x })
         }
       }
       break
@@ -52,9 +48,7 @@ function detectCollision(props, tetrominoes) {
       for (let [px, py] of points) {
         if (x + px >= width() || !emptyGrid({ x: x + px, y: y + py }, tetrominoes)) {
           props.x = x - 1
-          const collision = { x: props.x }
-          onCollision(collision)
-          return collision
+          onCollision({ x: props.x })
         }
       }
       break
@@ -63,9 +57,7 @@ function detectCollision(props, tetrominoes) {
       for (let [px, py] of points) {
         if (y + py >= height() || !emptyGrid({ x: x + px, y: y + py }, tetrominoes)) {
           props.y = y - 1
-          const collision = { y: props.y }
-          onCollision(collision)
-          return collision
+          onCollision({ y: props.y, over: true })
         }
       }
       break
@@ -73,14 +65,10 @@ function detectCollision(props, tetrominoes) {
     case FALLDOWN:
       // todo
       if (y != 24) {
-        const collision = { operation, y: 24 }
-        onCollision(collision)
-        return collision
+        onCollision({ y: 24, over: true })
       }
       break
   }
-
-  return {}
 }
 
 function rotatePoints(rotate) {
