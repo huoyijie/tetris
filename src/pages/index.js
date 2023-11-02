@@ -26,12 +26,16 @@ export default function () {
   const [tetrominoes, setTetrominoes] = useState([])
   const [currentTetromino, setCurrentTetromino] = useState()
   const [operation, setOperation] = useState()
+  const [gameOver, setGameOver] = useState(false)
 
-  const next = () => {
+  const frozen = () => {
     if (currentTetromino) {
       tetrominoes.push(currentTetromino)
       setTetrominoes([...tetrominoes])
     }
+  }
+  const next = () => {
+    frozen()
     setCurrentTetromino(nextTetromino())
   }
 
@@ -85,7 +89,7 @@ export default function () {
   }
 
   return (
-    <Context.Provider value={{ width, height, currentTetromino, tetrominoes, operation, fallDown, rotate, down, left, right, next }}>
+    <Context.Provider value={{ width, height, currentTetromino, tetrominoes, operation, fallDown, rotate, down, left, right, next, frozen, gameOver, setGameOver }}>
       <main className='w-full h-screen focus:outline-none flex gap-8 items-center justify-center' tabIndex={0} onKeyDown={onKeyDown}>
         <Board />
         <Operation />

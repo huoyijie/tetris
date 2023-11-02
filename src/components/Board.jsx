@@ -4,20 +4,22 @@ import Context from './Context'
 import Cube from './Cube'
 
 export default function () {
-  const { currentTetromino, operation, tetrominoes, down, next, width, height } = useContext(Context)
+  const { currentTetromino, operation, tetrominoes, down, next, width, height, gameOver, setGameOver } = useContext(Context)
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
+    if (!gameOver) {
+      let clear = () => { }
       if (currentTetromino) {
-        down()
+        const intervalId = setInterval(down, 1000)
+        clear = () => clearInterval(intervalId)
       } else {
-        next()
+        queueMicrotask(next)
       }
-    }, 1000)
-    return () => clearInterval(intervalId)
-  }, [currentTetromino])
+      return clear
+    }
+  }, [gameOver, currentTetromino])
 
-  const onCollision = ({ x, y, rotate, over }) => {
+  const onCollision = ({ x, y, rotate, over, gameOver }) => {
     if (Number.isInteger(x)) {
       currentTetromino.x = x
     }
@@ -30,7 +32,9 @@ export default function () {
       currentTetromino.rotate = rotate
     }
 
-    if (over) {
+    if (gameOver) {
+      queueMicrotask(() => setGameOver(true))
+    } else if (over) {
       queueMicrotask(next)
     }
   }
@@ -52,6 +56,11 @@ export default function () {
           <Tetromino key={i} {...tetromino} />
         ))}
         {bgCubes}
+        {gameOver && (
+          <div className='absolute top-0 left-0 w-full h-full z-100 bg-white opacity-75 flex items-center justify-center'>
+            <span className='text-4xl font-bold'>Game Over</span>
+          </div>
+        )}
       </div>
       <div className='flex gap-2 items-center'>
         <span className='text-gray-500'>https://github.com/huoyijie/tetris</span>

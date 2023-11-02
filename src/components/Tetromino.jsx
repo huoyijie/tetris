@@ -49,13 +49,13 @@ function detectCollision(props, tetrominoes, width, height) {
       for (let [px, py] of points) {
         if (y + py >= height() || !emptyGrid({ x: x + px, y: y + py }, tetrominoes)) {
           props.y = y - 1
-          onCollision({ y: props.y, over: true })
+          onCollision({ y: props.y, over: true, gameOver: props.y == 0 })
         }
       }
       break
 
     case FALLDOWN:
-      // todo
+      // todo |gameover logic
       if (y != 24) {
         onCollision({ y: 24, over: true })
       }
