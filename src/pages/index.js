@@ -59,10 +59,21 @@ export default function () {
     setOperation(RIGHT)
   }
 
+  const newGame = () => {
+    setTetrominoes([])
+    setCurrentTetromino(null)
+    setOperation(null)
+    setGameOver(false)
+  }
+
   const fallDown = () => { }//setOperation(FALLDOWN)
 
   const onKeyDown = ({ code }) => {
     switch (code) {
+      case 'KeyN':
+        newGame()
+        break
+
       case 'ArrowUp':
         rotate()
         break
@@ -89,7 +100,7 @@ export default function () {
   }
 
   return (
-    <Context.Provider value={{ width, height, currentTetromino, tetrominoes, operation, fallDown, rotate, down, left, right, next, frozen, gameOver, setGameOver }}>
+    <Context.Provider value={{ width, height, currentTetromino, tetrominoes, operation, newGame, fallDown, rotate, down, left, right, next, frozen, gameOver, setGameOver }}>
       <main className='w-full h-screen focus:outline-none flex gap-8 items-center justify-center' tabIndex={0} onKeyDown={onKeyDown}>
         <Board />
         <Operation />

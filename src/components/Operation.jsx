@@ -3,10 +3,17 @@ import { useContext } from 'react'
 import Context from './Context'
 
 export default function () {
-  const { fallDown } = useContext(Context)
+  const { gameOver, newGame, fallDown } = useContext(Context)
+
+  const btnNewGameDisabled = !gameOver
+  const btnFallDownDisabled = gameOver
 
   return (
     <div className='flex flex-col gap-8 items-center'>
+
+      <div className='w-full'>
+        <button className={`w-full border rounded-lg px-6 py-3 bg-slate-400 text-white focus:outline-none ${btnNewGameDisabled ? 'opacity-50' : 'hover:bg-slate-600 active:bg-slate-400'}`} onClick={newGame} disabled={btnNewGameDisabled}>New Game (N)</button>
+      </div>
 
       <div className='flex flex-col gap-2 items-center'>
         <div className='border rounded-lg bg-slate-400 text-white px-6 py-3 max-w-min'><ChevronUpIcon className='w-6' /></div>
@@ -18,7 +25,7 @@ export default function () {
       </div>
 
       <div className='w-full'>
-        <button className='w-full border rounded-lg px-6 py-3 bg-slate-400 text-white hover:bg-slate-600 active:bg-slate-400 focus:outline-none' onClick={fallDown}>Fall down (Space)</button>
+        <button className={`w-full border rounded-lg px-6 py-3 bg-slate-400 text-white focus:outline-none ${btnFallDownDisabled ? 'opacity-50' : 'hover:bg-slate-600 active:bg-slate-400'}`} onClick={fallDown} disabled={btnFallDownDisabled}>Fall down (Space)</button>
       </div>
 
     </div>
