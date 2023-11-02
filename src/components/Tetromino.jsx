@@ -4,14 +4,6 @@ import { DOWN, FALLDOWN, LEFT, RIGHT, ROTATE } from '@/lib/OperationType'
 import { useContext } from 'react'
 import Context from './Context'
 
-function width() {
-  return 480 / 24
-}
-
-function height() {
-  return 600 / 24
-}
-
 function emptyGrid({ x, y }, tetrominoes) {
   for (let { x: tx, y: ty, rotate } of tetrominoes) {
     for (let [px, py] of rotatePoints(rotate)) {
@@ -22,7 +14,7 @@ function emptyGrid({ x, y }, tetrominoes) {
   return true
 }
 
-function detectCollision(props, tetrominoes) {
+function detectCollision(props, tetrominoes, width, height) {
   const { x, y, rotate, operation, onCollision, points } = props
   switch (operation) {
     case ROTATE:
@@ -77,7 +69,7 @@ function rotatePoints(rotate) {
 
 export default function ({ type, x, y, rotate = 0, active = false, operation = false, onCollision }) {
   const props = { x, y, rotate, operation, onCollision, points: null }
-  const { tetrominoes } = useContext(Context)
+  const { tetrominoes, width, height } = useContext(Context)
 
   let tetromino = <></>
   switch (type) {
@@ -85,7 +77,7 @@ export default function ({ type, x, y, rotate = 0, active = false, operation = f
       props.points = rotatePoints(rotate)
 
       if (operation) {
-        detectCollision(props, tetrominoes)
+        detectCollision(props, tetrominoes, width, height)
       }
 
       tetromino = (
@@ -99,7 +91,7 @@ export default function ({ type, x, y, rotate = 0, active = false, operation = f
   }
 
   return (
-    <div className='max-w-min absolute' style={{ top: props.y * 24, left: props.x * 24 }}>
+    <div className='max-w-min absolute z-50' style={{ top: props.y * 24, left: props.x * 24 }}>
       {tetromino}
     </div>
   )

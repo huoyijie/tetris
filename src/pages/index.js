@@ -5,6 +5,14 @@ import Operation from '@/components/Operation'
 import Context from '@/components/Context'
 import Board from '@/components/Board'
 
+function width() {
+  return 480 / 24
+}
+
+function height() {
+  return 600 / 24
+}
+
 function nextTetromino() {
   return {
     type: I,
@@ -77,7 +85,7 @@ export default function () {
   }
 
   return (
-    <Context.Provider value={{ currentTetromino, tetrominoes, operation, fallDown, rotate, down, left, right, next }}>
+    <Context.Provider value={{ width, height, currentTetromino, tetrominoes, operation, fallDown, rotate, down, left, right, next }}>
       <main className='w-full h-screen focus:outline-none flex gap-8 items-center justify-center' tabIndex={0} onKeyDown={onKeyDown}>
         <Board />
         <Operation />
