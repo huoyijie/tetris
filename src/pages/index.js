@@ -1,6 +1,6 @@
 import { I } from '@/lib/TetrominoType'
-import { useState } from 'react'
-import { DOWN, FALLDOWN, LEFT, RIGHT, ROTATE } from '@/lib/OperationType'
+import { useEffect, useRef, useState } from 'react'
+import { DOWN, LEFT, RIGHT, ROTATE } from '@/lib/OperationType'
 import Operation from '@/components/Operation'
 import Context from '@/components/Context'
 import Board from '@/components/Board'
@@ -27,6 +27,11 @@ export default function () {
   const [currentTetromino, setCurrentTetromino] = useState()
   const [operation, setOperation] = useState()
   const [gameOver, setGameOver] = useState(false)
+  const mainRef = useRef()
+
+  useEffect(() => {
+    mainRef.current.focus()
+  }, [gameOver])
 
   const frozen = () => {
     if (currentTetromino) {
@@ -101,7 +106,7 @@ export default function () {
 
   return (
     <Context.Provider value={{ width, height, currentTetromino, tetrominoes, operation, newGame, fallDown, rotate, down, left, right, next, frozen, gameOver, setGameOver }}>
-      <main className='w-full h-screen focus:outline-none flex gap-8 items-center justify-center' tabIndex={0} onKeyDown={onKeyDown}>
+      <main ref={mainRef} className='w-full h-screen focus:outline-none flex gap-8 items-center justify-center' tabIndex={1} onKeyDown={onKeyDown}>
         <Board />
         <Operation />
       </main>
