@@ -2,9 +2,10 @@ import { useContext, useEffect } from 'react'
 import Tetromino from './Tetromino'
 import Context from './Context'
 import Cube from './Cube'
+import { BOARD_HEIGHT, BOARD_WIDTH, BOARD_X_CUBES, BOARD_Y_CUBES } from '@/lib/tetris'
 
 export default function () {
-  const { currentTetromino, operation, tetrominoes, down, next, width, height, gameOver, setGameOver } = useContext(Context)
+  const { currentTetromino, tetrominoes, down, next, gameOver } = useContext(Context)
 
   useEffect(() => {
     if (!gameOver) {
@@ -19,38 +20,18 @@ export default function () {
     }
   }, [gameOver, currentTetromino])
 
-  const onCollision = ({ x, y, rotate, over, gameOver }) => {
-    if (Number.isInteger(x)) {
-      currentTetromino.x = x
-    }
-
-    if (Number.isInteger(y)) {
-      currentTetromino.y = y
-    }
-
-    if (Number.isInteger(rotate)) {
-      currentTetromino.rotate = rotate
-    }
-
-    if (gameOver) {
-      queueMicrotask(() => setGameOver(true))
-    } else if (over) {
-      queueMicrotask(next)
-    }
-  }
-
   const bgCubes = []
-  for (let i = 0; i < width(); i++) {
-    for (let j = 0; j < height(); j++) {
+  for (let i = 0; i < BOARD_X_CUBES; i++) {
+    for (let j = 0; j < BOARD_Y_CUBES; j++) {
       bgCubes.push((<Cube key={`bgCube-${i}-${j}`} x={i} y={j} shadow={true} />))
     }
   }
 
   return (
     <div className='flex flex-col gap-4 items-center'>
-      <div className='outline outline-1 outline-black rounded relative' style={{ width: 480, height: 600 }}>
+      <div className='outline outline-1 outline-black rounded relative' style={{ width: BOARD_WIDTH, height: BOARD_HEIGHT }}>
         {currentTetromino && (
-          <Tetromino {...currentTetromino} active={true} operation={operation} onCollision={onCollision} />
+          <Tetromino {...currentTetromino} active={true} />
         )}
         {tetrominoes.map((tetromino, i) => (
           <Tetromino key={i} {...tetromino} />
