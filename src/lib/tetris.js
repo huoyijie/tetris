@@ -80,6 +80,10 @@ function rotatePoints(type, points) {
   return rotated
 }
 
+function eliminateLines(tetromino, tetrominoes, setTetrominoes) {
+  return 0
+}
+
 function emptyGrid({ x, y }, tetrominoes) {
   for (let { x: tx, y: ty, points } of tetrominoes) {
     for (let [px, py] of points) {
@@ -88,70 +92,6 @@ function emptyGrid({ x, y }, tetrominoes) {
     }
   }
   return true
-}
-
-export const BOARD_WIDTH = 480
-export const BOARD_HEIGHT = 600
-export const BOARD_X_CUBES = BOARD_WIDTH / CUBE_SIZE
-export const BOARD_Y_CUBES = BOARD_HEIGHT / CUBE_SIZE
-
-export function nextTetromino() {
-  const type = TETROMINOES[randomInt(TETROMINOES.length)]
-  return {
-    type,
-    x: initX(type),
-    y: 0,
-    points: initPoints(type),
-  }
-}
-
-export function rotateTetromino(tetromino, tetrominoes) {
-  const { type, points } = tetromino
-  if (type == O)
-    return tetromino
-
-  const rotated = {
-    ...tetromino,
-    points: rotatePoints(type, points),
-  }
-
-  const { collised } = detectCollision(rotated, ROTATE, tetrominoes)
-
-  return collised ? tetromino : rotated
-}
-
-export function moveDownTetromino(tetromino, tetrominoes, onCollise, onGameOver) {
-  const moved = { ...tetromino, y: tetromino.y + 1 }
-
-  const { collised, reachTop } = detectCollision(moved, DOWN, tetrominoes)
-
-  if (!collised) {
-    return moved
-  }
-
-  if (reachTop) {
-    onGameOver()
-  } else {
-    onCollise()
-  }
-
-  return tetromino
-}
-
-export function moveLeftTetromino(tetromino, tetrominoes) {
-  const moved = { ...tetromino, x: tetromino.x - 1 }
-
-  const { collised } = detectCollision(moved, LEFT, tetrominoes)
-
-  return collised ? tetromino : moved
-}
-
-export function moveRightTetromino(tetromino, tetrominoes) {
-  const moved = { ...tetromino, x: tetromino.x + 1 }
-
-  const { collised } = detectCollision(moved, RIGHT, tetrominoes)
-
-  return collised ? tetromino : moved
 }
 
 function detectCollision(tetromino, operation, tetrominoes) {
@@ -189,4 +129,68 @@ function detectCollision(tetromino, operation, tetrominoes) {
     default:
       return {}
   }
+}
+
+export const BOARD_WIDTH = 480
+export const BOARD_HEIGHT = 600
+export const BOARD_X_CUBES = BOARD_WIDTH / CUBE_SIZE
+export const BOARD_Y_CUBES = BOARD_HEIGHT / CUBE_SIZE
+
+export function nextTetromino() {
+  const type = TETROMINOES[randomInt(TETROMINOES.length)]
+  return {
+    type,
+    x: initX(type),
+    y: 0,
+    points: initPoints(type),
+  }
+}
+
+export function rotateTetromino(tetromino, tetrominoes) {
+  const { type, points } = tetromino
+  if (type == O)
+    return tetromino
+
+  const rotated = {
+    ...tetromino,
+    points: rotatePoints(type, points),
+  }
+
+  const { collised } = detectCollision(rotated, ROTATE, tetrominoes)
+
+  return collised ? tetromino : rotated
+}
+
+export function moveDownTetromino(tetromino, tetrominoes, onCollise, onGameOver, setTetrominoes) {
+  const moved = { ...tetromino, y: tetromino.y + 1 }
+
+  const { collised, reachTop } = detectCollision(moved, DOWN, tetrominoes)
+
+  if (!collised) {
+    return moved
+  }
+
+  if (eliminateLines(tetromino, tetrominoes, setTetrominoes) == 0 && reachTop) {
+    onGameOver()
+  } else {
+    onCollise()
+  }
+
+  return tetromino
+}
+
+export function moveLeftTetromino(tetromino, tetrominoes) {
+  const moved = { ...tetromino, x: tetromino.x - 1 }
+
+  const { collised } = detectCollision(moved, LEFT, tetrominoes)
+
+  return collised ? tetromino : moved
+}
+
+export function moveRightTetromino(tetromino, tetrominoes) {
+  const moved = { ...tetromino, x: tetromino.x + 1 }
+
+  const { collised } = detectCollision(moved, RIGHT, tetrominoes)
+
+  return collised ? tetromino : moved
 }

@@ -31,7 +31,7 @@ export default function () {
   }
 
   const down = () => {
-    setCurrentTetromino(moveDownTetromino(currentTetromino, tetrominoes, () => queueMicrotask(next), () => setGameOver(true)))
+    setCurrentTetromino(moveDownTetromino(currentTetromino, tetrominoes, () => queueMicrotask(next), () => setGameOver(true), setTetrominoes))
   }
 
   const left = () => {
