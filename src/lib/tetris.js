@@ -123,13 +123,13 @@ export function rotateTetromino(tetromino, tetrominoes) {
 export function moveDownTetromino(tetromino, tetrominoes, onCollise, onGameOver) {
   const moved = { ...tetromino, y: tetromino.y + 1 }
 
-  const { collised, gameOver } = detectCollision(moved, DOWN, tetrominoes)
+  const { collised, reachTop } = detectCollision(moved, DOWN, tetrominoes)
 
   if (!collised) {
     return moved
   }
 
-  if (gameOver) {
+  if (reachTop) {
     onGameOver()
   } else {
     onCollise()
@@ -181,7 +181,7 @@ function detectCollision(tetromino, operation, tetrominoes) {
     case DOWN:
       for (let [px, py] of points) {
         if (y + py >= BOARD_Y_CUBES || !emptyGrid({ x: x + px, y: y + py }, tetrominoes)) {
-          return { collised: true, gameOver: tetromino.y - 1 == 0 }
+          return { collised: true, reachTop: tetromino.y - 1 == 0 }
         }
       }
 
