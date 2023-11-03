@@ -1,3 +1,4 @@
+import { DOWN, LEFT, RIGHT, ROTATE } from './OperationType'
 import { I, J, L, O, S, T, Z } from './TetrominoType'
 
 const CUBE_SIZE = 24
@@ -80,8 +81,8 @@ function rotatePoints(type, points) {
 }
 
 function emptyGrid({ x, y }, tetrominoes) {
-  for (let { x: tx, y: ty, rotate } of tetrominoes) {
-    for (let [px, py] of rotatePoints(rotate)) {
+  for (let { x: tx, y: ty, points } of tetrominoes) {
+    for (let [px, py] of points) {
       if (tx + px == x && ty + py == y)
         return false
     }
@@ -104,80 +105,84 @@ export function nextTetromino() {
   }
 }
 
-export function rotateTetromino({ type, x, y, points }) {
-  return {
-    type,
-    x,
-    y,
+export function rotateTetromino(tetromino, tetrominoes) {
+  const { type, points } = tetromino
+  if (type == O)
+    return tetromino
+
+  const rotated = {
+    ...tetromino,
     points: rotatePoints(type, points),
   }
+
+  const { collised } = detectCollision(rotated, ROTATE, tetrominoes)
+
+  return collised ? tetromino : rotated
 }
 
-function detectCollision(props, tetrominoes) {
-  const { x, y, rotate, operation, onCollision, points } = props
+export function moveDownTetromino(tetromino, tetrominoes, onOver, onGameOver) {
+  const moved = { ...tetromino, y: tetromino.y + 1 }
+
+  const { collised, over, gameOver } = detectCollision(moved, DOWN, tetrominoes)
+
+  if (gameOver) {
+    onGameOver()
+  } else if (over) {
+    onOver()
+  }
+
+  return collised ? tetromino : moved
+}
+
+export function moveLeftTetromino(tetromino, tetrominoes) {
+  const moved = { ...tetromino, x: tetromino.x - 1 }
+
+  const { collised } = detectCollision(moved, LEFT, tetrominoes)
+
+  return collised ? tetromino : moved
+}
+
+export function moveRightTetromino(tetromino, tetrominoes) {
+  const moved = { ...tetromino, x: tetromino.x + 1 }
+
+  const { collised } = detectCollision(moved, RIGHT, tetrominoes)
+
+  return collised ? tetromino : moved
+}
+
+function detectCollision(tetromino, operation, tetrominoes) {
+  const { x, y, points } = tetromino
   switch (operation) {
     case ROTATE:
       for (let [px, py] of points) {
         if (x + px < 0 || x + px >= BOARD_X_CUBES || y + py < 0 || y + py >= BOARD_Y_CUBES || !emptyGrid({ x: x + px, y: y + py }, tetrominoes)) {
-          props.rotate = (rotate == 0) ? 3 : (rotate - 1)
-          props.points = rotatePoints(props.rotate)
-          onCollision({ rotate: props.rotate })
+          return { collised: true }
         }
       }
-      break
 
     case LEFT:
       for (let [px, py] of points) {
         if (x + px < 0 || !emptyGrid({ x: x + px, y: y + py }, tetrominoes)) {
-          props.x = x + 1
-          onCollision({ x: props.x })
+          return { collised: true }
         }
       }
-      break
 
     case RIGHT:
       for (let [px, py] of points) {
         if (x + px >= BOARD_X_CUBES || !emptyGrid({ x: x + px, y: y + py }, tetrominoes)) {
-          props.x = x - 1
-          onCollision({ x: props.x })
+          return { collised: true }
         }
       }
-      break
 
     case DOWN:
       for (let [px, py] of points) {
         if (y + py >= BOARD_Y_CUBES || !emptyGrid({ x: x + px, y: y + py }, tetrominoes)) {
-          props.y = y - 1
-          onCollision({ y: props.y, over: true, gameOver: props.y == 0 })
+          return { collised: true, over: true, gameOver: tetromino.y - 1 == 0 }
         }
       }
-      break
 
     case FALLDOWN:
-      // todo |gameover logic
-      if (y != 24) {
-        onCollision({ y: 24, over: true })
-      }
-      break
+    default:
+      return {}
   }
 }
-
-// const onCollision = ({ x, y, rotate, over, gameOver }) => {
-//   if (Number.isInteger(x)) {
-//     currentTetromino.x = x
-//   }
-
-//   if (Number.isInteger(y)) {
-//     currentTetromino.y = y
-//   }
-
-//   if (Number.isInteger(rotate)) {
-//     currentTetromino.rotate = rotate
-//   }
-
-//   if (gameOver) {
-//     queueMicrotask(() => setGameOver(true))
-//   } else if (over) {
-//     queueMicrotask(next)
-//   }
-// }

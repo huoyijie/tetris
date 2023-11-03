@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import Operation from '@/components/Operation'
 import Context from '@/components/Context'
 import Board from '@/components/Board'
-import { nextTetromino, rotateTetromino } from '@/lib/tetris'
+import { moveDownTetromino, moveLeftTetromino, moveRightTetromino, nextTetromino, rotateTetromino } from '@/lib/tetris'
 
 export default function () {
   const [tetrominoes, setTetrominoes] = useState([])
@@ -27,19 +27,19 @@ export default function () {
   }
 
   const rotate = () => {
-    setCurrentTetromino({ ...rotateTetromino(currentTetromino) })
+    setCurrentTetromino(rotateTetromino(currentTetromino, tetrominoes))
   }
 
   const down = () => {
-    setCurrentTetromino({ ...currentTetromino, y: currentTetromino.y + 1 })
+    setCurrentTetromino(moveDownTetromino(currentTetromino, tetrominoes, () => queueMicrotask(next), () => setGameOver(true)))
   }
 
   const left = () => {
-    setCurrentTetromino({ ...currentTetromino, x: currentTetromino.x - 1 })
+    setCurrentTetromino(moveLeftTetromino(currentTetromino, tetrominoes))
   }
 
   const right = () => {
-    setCurrentTetromino({ ...currentTetromino, x: currentTetromino.x + 1 })
+    setCurrentTetromino(moveRightTetromino(currentTetromino, tetrominoes))
   }
 
   const newGame = () => {
