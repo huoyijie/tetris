@@ -89,6 +89,7 @@ function eliminateLines(tetromino, tetrominoes, setTetrominoes) {
       candidates.push(y + py)
     }
   })
+  candidates.sort((a, b) => a - b)
 
   const counts = candidates.map(_ => 0)
   const all = [...tetrominoes, tetromino]
