@@ -17,7 +17,7 @@ export default function () {
   const frozen = () => {
     if (currentTetromino) {
       tetrominoes.push(currentTetromino)
-      setTetrominoes([...tetrominoes])
+      setTetrominoes([...tetrominoes.filter(({ points }) => points.length > 0)])
     }
   }
 
@@ -82,7 +82,7 @@ export default function () {
   }
 
   return (
-    <Context.Provider value={{ currentTetromino, tetrominoes, newGame, fallDown, rotate, down, left, right, next, frozen, gameOver, setGameOver }}>
+    <Context.Provider value={{ currentTetromino, tetrominoes, newGame, fallDown, rotate, down, left, right, next, gameOver, setGameOver }}>
       <main ref={mainRef} className='w-full h-screen focus:outline-none flex gap-8 items-center justify-center' tabIndex={1} onKeyDown={onKeyDown}>
         <Board />
         <Operation />

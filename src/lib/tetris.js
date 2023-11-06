@@ -81,7 +81,47 @@ function rotatePoints(type, points) {
 }
 
 function eliminateLines(tetromino, tetrominoes, setTetrominoes) {
-  return 0
+  const { y, points } = tetromino
+
+  const candidates = []
+  points.forEach(([_, py]) => {
+    if (!candidates.includes(y + py)) {
+      candidates.push(y + py)
+    }
+  })
+
+  const counts = candidates.map(_ => 0)
+  const all = [...tetrominoes, tetromino]
+  all.forEach(({ y, points }) => {
+    points.forEach(([_, py]) => {
+      candidates.forEach((candidateY, i) => {
+        if (y + py == candidateY) {
+          counts[i]++
+        }
+      })
+    })
+  })
+
+  let eliminatedLines = 0
+  candidates.forEach((candidateY, i) => {
+    if (counts[i] == BOARD_X_CUBES) {
+      eliminatedLines++
+      all.forEach(tetromino => {
+        tetromino.points = tetromino.points.filter(([_, py]) => tetromino.y + py != candidateY)
+        tetromino.points.forEach(point => {
+          if (tetromino.y + point[1] < candidateY) {
+            point[1]++
+          }
+        })
+      })
+    }
+  })
+
+  if (eliminatedLines > 0) {
+    setTetrominoes([...tetrominoes])
+  }
+
+  return eliminatedLines
 }
 
 function emptyGrid({ x, y }, tetrominoes) {
