@@ -7,11 +7,21 @@ import { moveDownTetromino, moveLeftTetromino, moveRightTetromino, nextTetromino
 export default function () {
   const [tetrominoes, setTetrominoes] = useState([])
   const [currentTetromino, setCurrentTetromino] = useState()
-  const [gameOver, setGameOver] = useState(false)
+  const [gameOver, setGameOver] = useState(true)
   const mainRef = useRef()
 
   useEffect(() => {
     mainRef.current.focus()
+
+    const audio = new Audio('/tetris.mp3')
+    if (!gameOver) {
+      audio.loop = true
+      audio.play()
+    }
+
+    return () => {
+      audio.src = null
+    }
   }, [gameOver])
 
   const frozen = () => {

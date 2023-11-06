@@ -11,7 +11,7 @@ export default function () {
     if (!gameOver) {
       let clear = () => { }
       if (currentTetromino) {
-        const intervalId = setInterval(down, 1000)
+        const intervalId = setInterval(down, 500)
         clear = () => clearInterval(intervalId)
       } else {
         queueMicrotask(next)
