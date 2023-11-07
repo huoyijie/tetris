@@ -10,12 +10,13 @@ var audio
 export default function () {
   const [tetrominoes, setTetrominoes] = useState([])
   const [currentTetromino, setCurrentTetromino] = useState()
+  const predictedTetromino = predictTetromino(currentTetromino, tetrominoes)
   const [nextTetromino, setNextTetromino] = useState()
   const [score, setScore] = useState(0)
   const [eliminatedLines, setEliminatedLines] = useState(0)
   const [gameOver, setGameOver] = useState(true)
   const mainRef = useRef()
-  const predictedTetromino = predictTetromino(currentTetromino, tetrominoes)
+  const [time, setTime] = useState()
 
   useEffect(() => {
     mainRef.current.focus()
@@ -24,12 +25,14 @@ export default function () {
       audio = new Audio('/tetris.mp3')
     }
 
+    let clear
     if (!gameOver) {
       audio.loop = true
       audio.play()
+      clear = () => audio.pause()
     }
 
-    return () => audio.pause()
+    return clear
   }, [gameOver])
 
   const newGame = () => {
@@ -38,6 +41,7 @@ export default function () {
       setCurrentTetromino(null)
       setNextTetromino(randomTetromino())
       setGameOver(false)
+      setTime(new Date().getTime())
     }
   }
 
@@ -128,7 +132,7 @@ export default function () {
   }
 
   return (
-    <Context.Provider value={{ currentTetromino, predictedTetromino, nextTetromino, tetrominoes, newGame, fallDown, rotate, down, left, right, next, gameOver, setGameOver, score, eliminatedLines }}>
+    <Context.Provider value={{ currentTetromino, predictedTetromino, nextTetromino, tetrominoes, newGame, time, fallDown, rotate, down, left, right, next, gameOver, setGameOver, score, eliminatedLines }}>
       <main ref={mainRef} className='w-full h-screen focus:outline-none flex gap-8 items-center justify-center' tabIndex={1} onKeyDown={onKeyDown}>
         <Operation />
         <Board />
