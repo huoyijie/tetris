@@ -5,8 +5,6 @@ import Context from './Context'
 export default function () {
   const { gameOver, newGame, fallDown } = useContext(Context)
 
-  const btnNewGameDisabled = !gameOver
-
   return (
     <div className='flex flex-col gap-8 items-center'>
 
