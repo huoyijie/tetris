@@ -243,10 +243,11 @@ export function fallDownTetromino(tetromino, tetrominoes, onCollise, onGameOver,
     result = detectCollision(moved, DOWN, tetrominoes)
   } while (!result.collised)
 
+  tetromino.y = moved.y - 1
+
   if (eliminateLines(tetromino, tetrominoes, setTetrominoes) == 0 && result.reachTop) {
     onGameOver()
   } else {
-    tetromino.y = moved.y - 1
     onCollise()
   }
 }
