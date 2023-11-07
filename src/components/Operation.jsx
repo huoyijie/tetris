@@ -24,9 +24,11 @@ export default function () {
         </div>
       </div>
 
-      <div className='w-full'>
-        <button className={`w-full border rounded-lg px-6 py-3 bg-slate-400 text-white focus:outline-none ${btnFallDownDisabled ? 'opacity-50' : 'hover:bg-slate-600 active:bg-slate-400'}`} onClick={fallDown} disabled={btnFallDownDisabled}>Fall down (Space)</button>
-      </div>
+      {!gameOver && (
+        <div className='w-full'>
+          <button className='w-full border rounded-lg px-6 py-3 bg-slate-400 text-white focus:outline-none hover:bg-slate-600 active:bg-slate-400' onClick={fallDown}>Fall down (Space)</button>
+        </div>
+      )}
 
     </div>
   )
