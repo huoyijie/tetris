@@ -176,7 +176,7 @@ export const BOARD_HEIGHT = 600
 export const BOARD_X_CUBES = BOARD_WIDTH / CUBE_SIZE
 export const BOARD_Y_CUBES = BOARD_HEIGHT / CUBE_SIZE
 
-export function nextTetromino() {
+export function randomTetromino() {
   const type = TETROMINOES[randomInt(TETROMINOES.length)]
   return {
     type,

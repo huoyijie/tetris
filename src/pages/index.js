@@ -2,13 +2,15 @@ import { useEffect, useRef, useState } from 'react'
 import Operation from '@/components/Operation'
 import Context from '@/components/Context'
 import Board from '@/components/Board'
-import { fallDownTetromino, moveDownTetromino, moveLeftTetromino, moveRightTetromino, nextTetromino, rotateTetromino } from '@/lib/tetris'
+import { fallDownTetromino, moveDownTetromino, moveLeftTetromino, moveRightTetromino, randomTetromino, rotateTetromino } from '@/lib/tetris'
+import Info from '@/components/Info'
 
 var audio
 
 export default function () {
   const [tetrominoes, setTetrominoes] = useState([])
   const [currentTetromino, setCurrentTetromino] = useState()
+  const [nextTetromino, setNextTetromino] = useState()
   const [gameOver, setGameOver] = useState(true)
   const mainRef = useRef()
 
@@ -27,6 +29,15 @@ export default function () {
     return () => audio.pause()
   }, [gameOver])
 
+  const newGame = () => {
+    if (gameOver) {
+      setTetrominoes([])
+      setCurrentTetromino(null)
+      setNextTetromino(randomTetromino())
+      setGameOver(false)
+    }
+  }
+
   const frozen = () => {
     if (currentTetromino) {
       tetrominoes.push(currentTetromino)
@@ -36,7 +47,8 @@ export default function () {
 
   const next = () => {
     frozen()
-    setCurrentTetromino(nextTetromino())
+    setCurrentTetromino(nextTetromino)
+    setNextTetromino(randomTetromino())
   }
 
   const rotate = () => {
@@ -60,14 +72,6 @@ export default function () {
 
   const right = () => {
     setCurrentTetromino(moveRightTetromino(currentTetromino, tetrominoes))
-  }
-
-  const newGame = () => {
-    if (gameOver) {
-      setTetrominoes([])
-      setCurrentTetromino(null)
-      setGameOver(false)
-    }
   }
 
   const fallDown = () => {
@@ -113,10 +117,11 @@ export default function () {
   }
 
   return (
-    <Context.Provider value={{ currentTetromino, tetrominoes, newGame, fallDown, rotate, down, left, right, next, gameOver, setGameOver }}>
+    <Context.Provider value={{ currentTetromino, nextTetromino, tetrominoes, newGame, fallDown, rotate, down, left, right, next, gameOver, setGameOver }}>
       <main ref={mainRef} className='w-full h-screen focus:outline-none flex gap-8 items-center justify-center' tabIndex={1} onKeyDown={onKeyDown}>
         <Operation />
         <Board />
+        <Info />
       </main>
     </Context.Provider>
   )
