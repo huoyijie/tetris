@@ -5,7 +5,7 @@ import Cube from './Cube'
 import { BOARD_HEIGHT, BOARD_WIDTH, BOARD_X_CUBES, BOARD_Y_CUBES } from '@/lib/tetris'
 
 export default function () {
-  const { currentTetromino, tetrominoes, down, next, gameOver } = useContext(Context)
+  const { currentTetromino, predictedTetromino, tetrominoes, down, next, gameOver } = useContext(Context)
 
   useEffect(() => {
     if (!gameOver) {
@@ -32,6 +32,9 @@ export default function () {
       <div className='outline outline-1 outline-black rounded relative' style={{ width: BOARD_WIDTH, height: BOARD_HEIGHT }}>
         {currentTetromino && (
           <Tetromino {...currentTetromino} active={true} />
+        )}
+        {predictedTetromino && (
+          <Tetromino {...predictedTetromino} active={true} dashed={true} />
         )}
         {tetrominoes.map((tetromino, i) => (
           <Tetromino key={i} {...tetromino} />

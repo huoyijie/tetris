@@ -253,3 +253,16 @@ export function fallDownTetromino(tetromino, tetrominoes, onCollise, onGameOver,
     onCollise(eliminatedLines)
   }
 }
+
+export function predictTetromino(tetromino, tetrominoes) {
+  if (tetromino) {
+    let result
+    const predicted = { ...tetromino }
+    do {
+      predicted.y++
+      result = detectCollision(predicted, DOWN, tetrominoes)
+    } while (!result.collised)
+    predicted.y--
+    return predicted
+  }
+}

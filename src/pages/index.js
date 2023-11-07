@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import Operation from '@/components/Operation'
 import Context from '@/components/Context'
 import Board from '@/components/Board'
-import { fallDownTetromino, moveDownTetromino, moveLeftTetromino, moveRightTetromino, randomTetromino, rotateTetromino } from '@/lib/tetris'
+import { fallDownTetromino, moveDownTetromino, moveLeftTetromino, moveRightTetromino, predictTetromino, randomTetromino, rotateTetromino } from '@/lib/tetris'
 import Info from '@/components/Info'
 
 var audio
@@ -15,6 +15,7 @@ export default function () {
   const [eliminatedLines, setEliminatedLines] = useState(0)
   const [gameOver, setGameOver] = useState(true)
   const mainRef = useRef()
+  const predictedTetromino = predictTetromino(currentTetromino, tetrominoes)
 
   useEffect(() => {
     mainRef.current.focus()
@@ -127,7 +128,7 @@ export default function () {
   }
 
   return (
-    <Context.Provider value={{ currentTetromino, nextTetromino, tetrominoes, newGame, fallDown, rotate, down, left, right, next, gameOver, setGameOver, score, eliminatedLines }}>
+    <Context.Provider value={{ currentTetromino, predictedTetromino, nextTetromino, tetrominoes, newGame, fallDown, rotate, down, left, right, next, gameOver, setGameOver, score, eliminatedLines }}>
       <main ref={mainRef} className='w-full h-screen focus:outline-none flex gap-8 items-center justify-center' tabIndex={1} onKeyDown={onKeyDown}>
         <Operation />
         <Board />
