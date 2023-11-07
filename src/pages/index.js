@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import Operation from '@/components/Operation'
 import Context from '@/components/Context'
 import Board from '@/components/Board'
-import { moveDownTetromino, moveLeftTetromino, moveRightTetromino, nextTetromino, rotateTetromino } from '@/lib/tetris'
+import { fallDownTetromino, moveDownTetromino, moveLeftTetromino, moveRightTetromino, nextTetromino, rotateTetromino } from '@/lib/tetris'
+
+var audio
 
 export default function () {
   const [tetrominoes, setTetrominoes] = useState([])
@@ -13,15 +15,16 @@ export default function () {
   useEffect(() => {
     mainRef.current.focus()
 
-    const audio = new Audio('/tetris.mp3')
+    if (!audio) {
+      audio = new Audio('/tetris.mp3')
+    }
+
     if (!gameOver) {
       audio.loop = true
       audio.play()
     }
 
-    return () => {
-      audio.src = null
-    }
+    return () => audio.pause()
   }, [gameOver])
 
   const frozen = () => {
@@ -41,7 +44,14 @@ export default function () {
   }
 
   const down = () => {
-    setCurrentTetromino(moveDownTetromino(currentTetromino, tetrominoes, () => queueMicrotask(next), () => setGameOver(true), setTetrominoes))
+    setCurrentTetromino(
+      moveDownTetromino(
+        currentTetromino,
+        tetrominoes,
+        () => queueMicrotask(next),
+        () => setGameOver(true),
+        setTetrominoes)
+    )
   }
 
   const left = () => {
@@ -53,12 +63,23 @@ export default function () {
   }
 
   const newGame = () => {
-    setTetrominoes([])
-    setCurrentTetromino(null)
-    setGameOver(false)
+    if (gameOver) {
+      setTetrominoes([])
+      setCurrentTetromino(null)
+      setGameOver(false)
+    }
   }
 
-  const fallDown = () => { }
+  const fallDown = () => {
+    if (!gameOver && currentTetromino) {
+      fallDownTetromino(
+        currentTetromino,
+        tetrominoes,
+        () => queueMicrotask(next),
+        () => setGameOver(true),
+        setTetrominoes)
+    }
+  }
 
   const onKeyDown = ({ code }) => {
     switch (code) {
@@ -94,8 +115,8 @@ export default function () {
   return (
     <Context.Provider value={{ currentTetromino, tetrominoes, newGame, fallDown, rotate, down, left, right, next, gameOver, setGameOver }}>
       <main ref={mainRef} className='w-full h-screen focus:outline-none flex gap-8 items-center justify-center' tabIndex={1} onKeyDown={onKeyDown}>
-        <Board />
         <Operation />
+        <Board />
       </main>
     </Context.Provider>
   )

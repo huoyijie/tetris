@@ -166,7 +166,6 @@ function detectCollision(tetromino, operation, tetrominoes) {
         }
       }
 
-    case FALLDOWN:
     default:
       return {}
   }
@@ -234,4 +233,20 @@ export function moveRightTetromino(tetromino, tetrominoes) {
   const { collised } = detectCollision(moved, RIGHT, tetrominoes)
 
   return collised ? tetromino : moved
+}
+
+export function fallDownTetromino(tetromino, tetrominoes, onCollise, onGameOver, setTetrominoes) {
+  let result
+  const moved = { ...tetromino }
+  do {
+    moved.y++
+    result = detectCollision(moved, DOWN, tetrominoes)
+  } while (!result.collised)
+
+  if (eliminateLines(tetromino, tetrominoes, setTetrominoes) == 0 && result.reachTop) {
+    onGameOver()
+  } else {
+    tetromino.y = moved.y - 1
+    onCollise()
+  }
 }
