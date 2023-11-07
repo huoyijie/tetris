@@ -210,10 +210,11 @@ export function moveDownTetromino(tetromino, tetrominoes, onCollise, onGameOver,
     return moved
   }
 
-  if (eliminateLines(tetromino, tetrominoes, setTetrominoes) == 0 && reachTop) {
+  const eliminatedLines = eliminateLines(tetromino, tetrominoes, setTetrominoes)
+  if (eliminatedLines == 0 && reachTop) {
     onGameOver()
   } else {
-    onCollise()
+    onCollise(eliminatedLines)
   }
 
   return tetromino
@@ -245,9 +246,10 @@ export function fallDownTetromino(tetromino, tetrominoes, onCollise, onGameOver,
 
   tetromino.y = moved.y - 1
 
-  if (eliminateLines(tetromino, tetrominoes, setTetrominoes) == 0 && result.reachTop) {
+  const eliminatedLines = eliminateLines(tetromino, tetrominoes, setTetrominoes)
+  if (eliminatedLines == 0 && result.reachTop) {
     onGameOver()
   } else {
-    onCollise()
+    onCollise(eliminatedLines)
   }
 }

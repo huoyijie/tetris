@@ -4,7 +4,7 @@ import Context from './Context';
 import { I } from '@/lib/TetrominoType';
 
 export default function () {
-  const { gameOver, nextTetromino } = useContext(Context)
+  const { gameOver, nextTetromino, score, eliminatedLines } = useContext(Context)
 
   if (gameOver) return <></>
 
@@ -12,12 +12,14 @@ export default function () {
     <div className='flex flex-col gap-8'>
       <div className='flex gap-6 justify-between items-center'>
         <span>得分</span>
-        <span className='text-2xl font-bold text-red-600'>100</span>
+        <span className='text-2xl font-bold text-red-600'>{score}</span>
       </div>
+
       <div className='flex gap-6 justify-between items-center'>
         <span>消除行</span>
-        <span className='text-2xl font-bold text-red-600'>20</span>
+        <span className='text-2xl font-bold text-red-600'>{eliminatedLines}</span>
       </div>
+
       {nextTetromino && (
         <div className='flex gap-6 justify-between items-center'>
           <div>下一个</div>

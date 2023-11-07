@@ -11,6 +11,8 @@ export default function () {
   const [tetrominoes, setTetrominoes] = useState([])
   const [currentTetromino, setCurrentTetromino] = useState()
   const [nextTetromino, setNextTetromino] = useState()
+  const [score, setScore] = useState(0)
+  const [eliminatedLines, setEliminatedLines] = useState(0)
   const [gameOver, setGameOver] = useState(true)
   const mainRef = useRef()
 
@@ -55,12 +57,20 @@ export default function () {
     setCurrentTetromino(rotateTetromino(currentTetromino, tetrominoes))
   }
 
+  const onCollise = (elimiLines) => {
+    if (elimiLines > 0) {
+      setEliminatedLines(eliminatedLines + elimiLines)
+      setScore(score + 10 * Math.pow(2, elimiLines))
+    }
+    queueMicrotask(next)
+  }
+
   const down = () => {
     setCurrentTetromino(
       moveDownTetromino(
         currentTetromino,
         tetrominoes,
-        () => queueMicrotask(next),
+        onCollise,
         () => setGameOver(true),
         setTetrominoes)
     )
@@ -79,7 +89,7 @@ export default function () {
       fallDownTetromino(
         currentTetromino,
         tetrominoes,
-        () => queueMicrotask(next),
+        onCollise,
         () => setGameOver(true),
         setTetrominoes)
     }
@@ -117,7 +127,7 @@ export default function () {
   }
 
   return (
-    <Context.Provider value={{ currentTetromino, nextTetromino, tetrominoes, newGame, fallDown, rotate, down, left, right, next, gameOver, setGameOver }}>
+    <Context.Provider value={{ currentTetromino, nextTetromino, tetrominoes, newGame, fallDown, rotate, down, left, right, next, gameOver, setGameOver, score, eliminatedLines }}>
       <main ref={mainRef} className='w-full h-screen focus:outline-none flex gap-8 items-center justify-center' tabIndex={1} onKeyDown={onKeyDown}>
         <Operation />
         <Board />
