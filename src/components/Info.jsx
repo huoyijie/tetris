@@ -1,6 +1,7 @@
 import Tetromino from './Tetromino';
 import { useContext } from 'react';
 import Context from './Context';
+import { I } from '@/lib/TetrominoType';
 
 export default function () {
   const { gameOver, nextTetromino } = useContext(Context)
@@ -20,7 +21,7 @@ export default function () {
       {nextTetromino && (
         <div className='flex gap-6 justify-between items-center'>
           <div>下一个</div>
-          <div className='relative'><Tetromino {...nextTetromino} x={-1} y={-1} /></div>
+          <div className='relative'><Tetromino {...nextTetromino} x={-1} y={nextTetromino.type == I ? 0 : -1} /></div>
         </div>
       )}
     </div>
