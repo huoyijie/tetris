@@ -4,6 +4,7 @@ import Context from '@/components/Context'
 import Board from '@/components/Board'
 import { fallDownTetromino, moveDownTetromino, moveLeftTetromino, moveRightTetromino, predictTetromino, randomTetromino, rotateTetromino } from '@/lib/tetris'
 import Info from '@/components/Info'
+import Head from 'next/head'
 
 var audio
 
@@ -22,7 +23,7 @@ export default function () {
     mainRef.current.focus()
 
     if (!audio) {
-      audio = new Audio('/tetris.mp3')
+      audio = new Audio('tetris.mp3')
     }
 
     let clear
@@ -133,6 +134,10 @@ export default function () {
 
   return (
     <Context.Provider value={{ currentTetromino, predictedTetromino, nextTetromino, tetrominoes, newGame, time, fallDown, rotate, down, left, right, next, gameOver, setGameOver, score, eliminatedLines }}>
+      <Head>
+        <title>Tetris</title>
+        <link rel="icon" type="image/x-icon" href="favicon.ico"></link>
+      </Head>
       <main ref={mainRef} className='w-full h-screen focus:outline-none flex gap-8 items-center justify-center' tabIndex={1} onKeyDown={onKeyDown}>
         <Operation />
         <Board />
