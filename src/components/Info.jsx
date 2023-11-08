@@ -7,16 +7,21 @@ import t from '@/lib/time'
 const { h, m, s } = t()
 
 export default function Info() {
-  const { gameOver, time, nextTetromino, score, eliminatedLines } = useContext(Context)
+  const { gameOver, time, nextTetromino, score, eliminatedLines, level } = useContext(Context)
 
   if (gameOver) return <></>
-  const duration = new Date().getTime() - time
+  const duration = Date.now() - time
 
   return (
     <div className='flex flex-col gap-8'>
       <div className='flex gap-6 justify-between items-center'>
         <span>Time</span>
         <span className='text-2xl font-bold text-red-600'>{h(duration)}:{m(duration)}:{s(duration)}</span>
+      </div>
+
+      <div className='flex gap-6 justify-between items-center'>
+        <span>Level</span>
+        <span className='text-2xl font-bold text-red-600'>{level}</span>
       </div>
 
       <div className='flex gap-6 justify-between items-center'>

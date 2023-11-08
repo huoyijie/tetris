@@ -5,6 +5,9 @@ import Board from '@/components/Board'
 import { fallDownTetromino, moveDownTetromino, moveLeftTetromino, moveRightTetromino, predictTetromino, randomTetromino, rotateTetromino } from '@/lib/tetris'
 import Info from '@/components/Info'
 import Head from 'next/head'
+import t from '@/lib/time'
+
+const { MINUTE } = t()
 
 var audio
 
@@ -19,11 +22,29 @@ export default function Home() {
   const [time, setTime] = useState()
   const mainRef = useRef()
   const downIntervalRef = useRef()
+
   const clearDownInterval = () => {
     if (downIntervalRef.current) {
       clearInterval(downIntervalRef.current)
       downIntervalRef.current = null
     }
+  }
+
+  const level = () => {
+    if (!time) {
+      return 4
+    }
+
+    const duration = Date.now() - time
+    if (duration < MINUTE) {
+      return 4
+    } else if (duration < 5 * MINUTE) {
+      return 3
+    } else if (duration < 10 * MINUTE) {
+      return 2
+    }
+
+    return 1
   }
 
   useEffect(() => {
@@ -47,7 +68,7 @@ export default function Home() {
         return
       }
 
-      downIntervalRef.current = setInterval(down, 500)
+      downIntervalRef.current = setInterval(down, level() * 250)
       return clearDownInterval
     }
   }, [gameOver, currentTetromino])
@@ -58,7 +79,7 @@ export default function Home() {
       setCurrentTetromino(null)
       setNextTetromino(randomTetromino())
       setGameOver(false)
-      setTime(new Date().getTime())
+      setTime(Date.now())
     }
   }
 
@@ -150,7 +171,7 @@ export default function Home() {
   }
 
   return (
-    <Context.Provider value={{ currentTetromino, predictedTetromino, nextTetromino, tetrominoes, newGame, time, fallDown, rotate, down, left, right, next, gameOver, setGameOver, score, eliminatedLines }}>
+    <Context.Provider value={{ currentTetromino, predictedTetromino, nextTetromino, tetrominoes, newGame, time, fallDown, rotate, down, left, right, next, gameOver, setGameOver, score, eliminatedLines, level: level() }}>
       <Head>
         <title>Tetris</title>
         <link rel="icon" type="image/x-icon" href="favicon.ico"></link>
