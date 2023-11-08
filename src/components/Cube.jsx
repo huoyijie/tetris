@@ -1,4 +1,4 @@
-export default function ({ x, y, active = false, dashed = false, shadow = false }) {
+export default function Cube({ x, y, active = false, dashed = false, shadow = false }) {
   let borderColor = 'border-black'
   if (dashed) {
     borderColor = 'border-red-300'

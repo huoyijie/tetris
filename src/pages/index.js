@@ -8,7 +8,7 @@ import Head from 'next/head'
 
 var audio
 
-export default function () {
+export default function Home() {
   const [tetrominoes, setTetrominoes] = useState([])
   const [currentTetromino, setCurrentTetromino] = useState()
   const predictedTetromino = predictTetromino(currentTetromino, tetrominoes)

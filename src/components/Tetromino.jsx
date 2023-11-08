@@ -1,6 +1,6 @@
 import Cube from './Cube'
 
-export default function ({ x, y, points, active = false, dashed = false }) {
+export default function Tetromino({ x, y, points, active = false, dashed = false }) {
   let zIndex = 'z-50'
   if (dashed) {
     zIndex = 'z-80'

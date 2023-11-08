@@ -6,7 +6,7 @@ import t from '@/lib/time'
 
 const { h, m, s } = t()
 
-export default function () {
+export default function Info() {
   const { gameOver, time, nextTetromino, score, eliminatedLines } = useContext(Context)
 
   if (gameOver) return <></>

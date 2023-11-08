@@ -2,7 +2,7 @@ import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon } fro
 import { useContext } from 'react'
 import Context from './Context'
 
-export default function () {
+export default function Operation() {
   const { gameOver, newGame, down, left, right, rotate, fallDown } = useContext(Context)
 
   return (
