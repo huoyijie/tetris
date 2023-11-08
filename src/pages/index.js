@@ -14,7 +14,8 @@ var audio
 export default function Home() {
   const [tetrominoes, setTetrominoes] = useState([])
   const [currentTetromino, setCurrentTetromino] = useState()
-  const predictedTetromino = predictTetromino(currentTetromino, tetrominoes)
+  const currentTetrominoValid = currentTetromino && currentTetromino.points.length > 0
+  const predictedTetromino = currentTetrominoValid ? predictTetromino(currentTetromino, tetrominoes) : null
   const [nextTetromino, setNextTetromino] = useState()
   const [score, setScore] = useState(0)
   const [eliminatedLines, setEliminatedLines] = useState(0)
@@ -83,21 +84,13 @@ export default function Home() {
     }
   }
 
-  const frozen = () => {
+  const next = () => {
     if (currentTetromino) {
       tetrominoes.push(currentTetromino)
       setTetrominoes([...tetrominoes.filter(({ points }) => points.length > 0)])
     }
-  }
-
-  const next = () => {
-    frozen()
     setCurrentTetromino(nextTetromino)
     setNextTetromino(randomTetromino())
-  }
-
-  const rotate = () => {
-    setCurrentTetromino(rotateTetromino(currentTetromino, tetrominoes))
   }
 
   const onCollise = (elimiLines) => {
@@ -109,33 +102,43 @@ export default function Home() {
     queueMicrotask(next)
   }
 
+  const rotate = () => {
+    if (!gameOver && currentTetrominoValid) {
+      setCurrentTetromino(rotateTetromino(currentTetromino, tetrominoes))
+    }
+  }
+
   const down = () => {
-    setCurrentTetromino(
-      moveDownTetromino(
-        currentTetromino,
-        tetrominoes,
-        onCollise,
-        () => setGameOver(true),
-        setTetrominoes)
-    )
+    if (!gameOver && currentTetrominoValid) {
+      setCurrentTetromino(
+        moveDownTetromino(
+          currentTetromino,
+          tetrominoes,
+          onCollise,
+          () => setGameOver(true))
+      )
+    }
   }
 
   const left = () => {
-    setCurrentTetromino(moveLeftTetromino(currentTetromino, tetrominoes))
+    if (!gameOver && currentTetrominoValid) {
+      setCurrentTetromino(moveLeftTetromino(currentTetromino, tetrominoes))
+    }
   }
 
   const right = () => {
-    setCurrentTetromino(moveRightTetromino(currentTetromino, tetrominoes))
+    if (!gameOver && currentTetrominoValid) {
+      setCurrentTetromino(moveRightTetromino(currentTetromino, tetrominoes))
+    }
   }
 
   const fallDown = () => {
-    if (!gameOver && currentTetromino) {
+    if (!gameOver && currentTetrominoValid) {
       fallDownTetromino(
         currentTetromino,
         tetrominoes,
         onCollise,
-        () => setGameOver(true),
-        setTetrominoes)
+        () => setGameOver(true))
     }
   }
 

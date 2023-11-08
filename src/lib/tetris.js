@@ -80,7 +80,7 @@ function rotatePoints(type, points) {
   return rotated
 }
 
-function eliminateLines(tetromino, tetrominoes, setTetrominoes) {
+function eliminateLines(tetromino, tetrominoes) {
   const { y, points } = tetromino
 
   const candidates = []
@@ -117,10 +117,6 @@ function eliminateLines(tetromino, tetrominoes, setTetrominoes) {
       })
     }
   })
-
-  if (eliminatedLines > 0) {
-    setTetrominoes([...tetrominoes])
-  }
 
   return eliminatedLines
 }
@@ -201,7 +197,7 @@ export function rotateTetromino(tetromino, tetrominoes) {
   return collised ? tetromino : rotated
 }
 
-export function moveDownTetromino(tetromino, tetrominoes, onCollise, onGameOver, setTetrominoes) {
+export function moveDownTetromino(tetromino, tetrominoes, onCollise, onGameOver) {
   const moved = { ...tetromino, y: tetromino.y + 1 }
 
   const { collised, reachTop } = detectCollision(moved, DOWN, tetrominoes)
@@ -210,7 +206,7 @@ export function moveDownTetromino(tetromino, tetrominoes, onCollise, onGameOver,
     return moved
   }
 
-  const eliminatedLines = eliminateLines(tetromino, tetrominoes, setTetrominoes)
+  const eliminatedLines = eliminateLines(tetromino, tetrominoes)
   if (eliminatedLines == 0 && reachTop) {
     onGameOver()
   } else {
@@ -236,7 +232,7 @@ export function moveRightTetromino(tetromino, tetrominoes) {
   return collised ? tetromino : moved
 }
 
-export function fallDownTetromino(tetromino, tetrominoes, onCollise, onGameOver, setTetrominoes) {
+export function fallDownTetromino(tetromino, tetrominoes, onCollise, onGameOver) {
   let result
   const moved = { ...tetromino }
   do {
@@ -246,7 +242,7 @@ export function fallDownTetromino(tetromino, tetrominoes, onCollise, onGameOver,
 
   tetromino.y = moved.y - 1
 
-  const eliminatedLines = eliminateLines(tetromino, tetrominoes, setTetrominoes)
+  const eliminatedLines = eliminateLines(tetromino, tetrominoes)
   if (eliminatedLines == 0 && result.reachTop) {
     onGameOver()
   } else {
@@ -255,14 +251,12 @@ export function fallDownTetromino(tetromino, tetrominoes, onCollise, onGameOver,
 }
 
 export function predictTetromino(tetromino, tetrominoes) {
-  if (tetromino) {
-    let result
-    const predicted = { ...tetromino }
-    do {
-      predicted.y++
-      result = detectCollision(predicted, DOWN, tetrominoes)
-    } while (!result.collised)
-    predicted.y--
-    return predicted
-  }
+  let result
+  const predicted = { ...tetromino }
+  do {
+    predicted.y++
+    result = detectCollision(predicted, DOWN, tetrominoes)
+  } while (!result.collised)
+  predicted.y--
+  return predicted
 }
