@@ -57,6 +57,7 @@ export default function Home() {
 
     if (!gameOver) {
       audio.loop = true
+      audio.currentTime = 0
       audio.play()
       return () => audio.pause()
     }
