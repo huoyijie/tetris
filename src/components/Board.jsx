@@ -1,8 +1,7 @@
 import { useContext, useEffect } from 'react'
 import Tetromino from './Tetromino'
 import Context from './Context'
-import Cube from './Cube'
-import { BOARD_HEIGHT, BOARD_WIDTH, BOARD_X_CUBES, BOARD_Y_CUBES } from '@/lib/tetris'
+import { BOARD_HEIGHT, BOARD_WIDTH } from '@/lib/tetris'
 import BoardBgCubes from './BoardBgCubes'
 
 export default function Board() {
