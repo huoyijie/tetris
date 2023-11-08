@@ -1,24 +1,11 @@
-import { useContext, useEffect } from 'react'
+import { useContext } from 'react'
 import Tetromino from './Tetromino'
 import Context from './Context'
 import { BOARD_HEIGHT, BOARD_WIDTH } from '@/lib/tetris'
 import BoardBgCubes from './BoardBgCubes'
 
 export default function Board() {
-  const { currentTetromino, predictedTetromino, tetrominoes, down, next, gameOver } = useContext(Context)
-
-  useEffect(() => {
-    if (!gameOver) {
-      let clear = () => { }
-      if (currentTetromino) {
-        const intervalId = setInterval(down, 500)
-        clear = () => clearInterval(intervalId)
-      } else {
-        queueMicrotask(next)
-      }
-      return clear
-    }
-  }, [gameOver, currentTetromino])
+  const { currentTetromino, predictedTetromino, tetrominoes, gameOver } = useContext(Context)
 
   return (
     <div className='flex flex-col gap-4 items-center'>

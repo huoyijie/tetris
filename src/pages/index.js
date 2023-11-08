@@ -16,8 +16,15 @@ export default function Home() {
   const [score, setScore] = useState(0)
   const [eliminatedLines, setEliminatedLines] = useState(0)
   const [gameOver, setGameOver] = useState(true)
-  const mainRef = useRef()
   const [time, setTime] = useState()
+  const mainRef = useRef()
+  const downIntervalRef = useRef()
+  const clearDownInterval = () => {
+    if (downIntervalRef.current) {
+      clearInterval(downIntervalRef.current)
+      downIntervalRef.current = null
+    }
+  }
 
   useEffect(() => {
     mainRef.current.focus()
@@ -26,15 +33,24 @@ export default function Home() {
       audio = new Audio('tetris.mp3')
     }
 
-    let clear
     if (!gameOver) {
       audio.loop = true
       audio.play()
-      clear = () => audio.pause()
+      return () => audio.pause()
     }
-
-    return clear
   }, [gameOver])
+
+  useEffect(() => {
+    if (!gameOver) {
+      if (!currentTetromino) {
+        queueMicrotask(next)
+        return
+      }
+
+      downIntervalRef.current = setInterval(down, 500)
+      return clearDownInterval
+    }
+  }, [gameOver, currentTetromino])
 
   const newGame = () => {
     if (gameOver) {
@@ -68,6 +84,7 @@ export default function Home() {
       setEliminatedLines(eliminatedLines + elimiLines)
       setScore(score + 10 * (elimiLines == 1 ? 1 : Math.pow(2, elimiLines)))
     }
+    clearDownInterval()
     queueMicrotask(next)
   }
 
