@@ -66,7 +66,7 @@ export default function Home() {
   const onCollise = (elimiLines) => {
     if (elimiLines > 0) {
       setEliminatedLines(eliminatedLines + elimiLines)
-      setScore(score + 10 * Math.pow(2, elimiLines))
+      setScore(score + 10 * (elimiLines == 1 ? 1 : Math.pow(2, elimiLines)))
     }
     queueMicrotask(next)
   }
