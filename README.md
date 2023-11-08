@@ -11,3 +11,7 @@ pnpm dev
 # or
 bun dev
 ```
+
+## todo
+
+* 声音淡入淡出 (fade in/out)，避免 loop 背景音乐卡顿感
