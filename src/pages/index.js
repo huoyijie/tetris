@@ -81,6 +81,8 @@ export default function Home() {
       setNextTetromino(randomTetromino())
       setGameOver(false)
       setTime(Date.now())
+      setScore(0)
+      setEliminatedLines(0)
     }
   }
 

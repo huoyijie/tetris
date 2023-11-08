@@ -21,8 +21,8 @@ export default function Board() {
         ))}
         <BoardBgCubes />
         {gameOver && (
-          <div className='absolute top-0 left-0 w-full h-full z-100 bg-white opacity-50 flex items-center justify-center'>
-            <span className='text-4xl font-bold'>Game Over</span>
+          <div className='absolute top-0 left-0 w-full h-full z-100 bg-white opacity-75 flex items-center justify-center'>
+            <span className='text-6xl font-bold'>Game Over</span>
           </div>
         )}
       </div>

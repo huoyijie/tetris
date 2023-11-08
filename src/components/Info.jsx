@@ -7,9 +7,9 @@ import t from '@/lib/time'
 const { h, m, s } = t()
 
 export default function Info() {
-  const { gameOver, time, nextTetromino, score, eliminatedLines, level } = useContext(Context)
+  const { time, nextTetromino, score, eliminatedLines, level } = useContext(Context)
 
-  if (gameOver) return <></>
+  if (!time) return <></>
   const duration = Date.now() - time
 
   return (
